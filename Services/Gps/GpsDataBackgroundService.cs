@@ -40,8 +40,7 @@ namespace SatelliteTracker.Backend.Services
             {
                 using var scope = _serviceProvider.CreateScope();
                 var parser = scope.ServiceProvider.GetRequiredService<INmeaParserService>();
-                var repository = scope.ServiceProvider.GetRequiredService<ISatelliteDataRepository>();
-
+                
                 var data = await parser.ParseNmeaMessage(nmea);
                 if (data != null)
                 {
