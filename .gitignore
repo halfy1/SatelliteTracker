@@ -52,3 +52,45 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+
+### Добавьте эти правила в существующий файл ###
+
+# User-specific files (Visual Studio, Rider, etc.)
+*.user
+*.suo
+*.userprefs
+*.vspscc
+*.vssscc
+.vs/
+.idea/
+
+# Local development configs (sensitive data)
+appsettings.Development.json
+appsettings.local.json
+appsettings.*.json
+secrets.json
+Properties/launchSettings.json
+
+# Migrations (if auto-generated)
+Migrations/
+
+# HTTP client files (if containing secrets)
+*.http
+
+# Build server artifacts
+[Dd]ebug[Pp]ublic/
+[Tt]emp/
+[Nn]uGet/
+packages/
+
+# Code coverage
+.coverage
+*.coverage
+*.coveragexml
+
+# Docker
+docker-compose.override.yml
+
+# macOS
+.DS_Store
