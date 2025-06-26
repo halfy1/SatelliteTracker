@@ -30,7 +30,7 @@ namespace SatelliteTracker.Backend.Repositories
                 query = query.Where(d => d.SatelliteSystem == system);
             }
 
-            return await query.ToListAsync();
+            return await query.AsNoTracking().ToListAsync();
         }
     }
 }

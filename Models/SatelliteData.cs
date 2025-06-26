@@ -16,19 +16,22 @@ namespace SatelliteTracker.Backend.Models
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
         public double? Altitude { get; set; }
-        public int SatellitesInUse { get; set; }
+        public int? SatellitesInUse { get; set; }
 
-        // Информация о спутниках
+        // Информация о спутниках (для GPGSV)
         [Required]
         [MaxLength(10)]
-        public string SatelliteSystem { get; set; } = null!;
-        public int SatelliteId { get; set; }
-        public double Elevation { get; set; } // в градусах
-        public double Azimuth { get; set; }   // в градусах
+        public string SatelliteSystem { get; set; } = "GPS";
+
+        public int? SatelliteId { get; set; }
+        public double? Elevation { get; set; } // градусы
+        public double? Azimuth { get; set; }   // градусы
         public int? SignalToNoiseRatio { get; set; }
+
         public bool UsedInFix { get; set; }
 
-        // Дополнительные поля
+        // Тип предложения NMEA (например, GPGGA, GPGSV)
         public string SentenceType { get; set; } = string.Empty;
     }
 }
+    

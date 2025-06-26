@@ -20,14 +20,17 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 //for db
-//builder.Services.AddDbContext<AppDbContext>(options =>
-//    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+// Подключение бд
+builder.Services.AddScoped<ISatelliteDataRepository, SatelliteDataRepository>();
+// Mock данные
+//builder.Services.AddSingleton<ISatelliteDataRepository, MockSatelliteDataRepository>();
 
 // Регистрация сервисов
-
-//builder.Services.AddScoped<ISatelliteDataRepository, SatelliteDataRepository>();
 builder.Services.Configure<GpsSettings>(builder.Configuration.GetSection("GpsSettings"));
-builder.Services.AddSingleton<ISatelliteDataRepository, MockSatelliteDataRepository>();
 builder.Services.AddScoped<INmeaParserService, NmeaParserService>();
 builder.Services.AddSingleton<WebSocketConnectionManager>();
 builder.Services.AddHostedService<GpsDataBackgroundService>();
