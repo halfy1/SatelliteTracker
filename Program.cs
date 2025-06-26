@@ -31,10 +31,17 @@ builder.Services.AddSingleton<ISatelliteDataRepository, MockSatelliteDataReposit
 builder.Services.AddScoped<INmeaParserService, NmeaParserService>();
 builder.Services.AddSingleton<WebSocketConnectionManager>();
 builder.Services.AddHostedService<GpsDataBackgroundService>();
-builder.Services.AddSingleton<IGpsReader, SimulatedGpsReader>();
 
 
-
+var gpsSettings = builder.Configuration.GetSection("GpsSettings").Get<GpsSettings>();
+if (gpsSettings.SimulationMode)
+{
+    builder.Services.AddSingleton<IGpsReader, FileGpsReader>();
+}
+else
+{
+    builder.Services.AddSingleton<IGpsReader, SimulatedGpsReader>();
+}
 
 // Health Checks
 builder.Services.AddHealthChecks();
@@ -50,12 +57,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseDefaultFiles();
+app.UseStaticFiles();     
 app.UseWebSockets();
 app.UseMiddleware<WebSocketMiddleware>();
 
+
 Console.WriteLine($"ENVIRONMENT: {builder.Environment.EnvironmentName}");
 
-app.MapFallbackToFile("index.html");
+
 
 app.MapHealthChecks("/health", new HealthCheckOptions
 {

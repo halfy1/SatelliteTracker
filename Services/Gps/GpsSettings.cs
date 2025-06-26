@@ -10,5 +10,7 @@ namespace SatelliteTracker.Backend.Services.Gps
         public bool SimulationMode { get; set; }  // –ежим симул€ции
         public string WebSocketPath { get; set; }  // ѕуть дл€ WebSocket
         public int UpdateIntervalMs { get; set; }  // »нтервал обновлени€ в миллисекундах
+
+        public string SimulationDataFilePath { get; set; } // ѕуть к файлу
     }
 }

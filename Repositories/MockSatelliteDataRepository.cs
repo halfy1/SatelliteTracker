@@ -10,11 +10,11 @@ public class MockSatelliteDataRepository : ISatelliteDataRepository
 
     public Task AddSatelliteDataAsync(SatelliteData data)
     {
-        Console.WriteLine($"[MockRepo] Данные спутника добавлены: " +
+        /*Console.WriteLine($"[MockRepo] Данные спутника добавлены: " +
             $"ID={data.SatelliteId}, System={data.SatelliteSystem}, " +
             $"Time={data.Timestamp:dd.MM.yyyy HH:mm:ss}, " +
             $"Elevation={data.Elevation}°, Azimuth={data.Azimuth}°, " +
-            $"SNR={data.SignalToNoiseRatio} dB");
+            $"SNR={data.SignalToNoiseRatio} dB");*/
 
         return Task.CompletedTask;
     }

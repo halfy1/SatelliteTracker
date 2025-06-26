@@ -1,34 +1,26 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Satellite Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=60433838-0d90-4549-879c-5d95a0c1e3e2&lang=ru_RU"></script>
 </head>
 <body>
-    <h1>Current GPS Data</h1>
-    <pre id="gpsData">Waiting for data...</pre>
-
-    <script>
-        const socket = new WebSocket('ws://localhost:5008/ws');
-
-        socket.onopen = function () {
-            console.log('WebSocket connected');
-        };
-
-        socket.onmessage = function (event) {
-            const data = JSON.parse(event.data);
-            const gpsDataElement = document.getElementById('gpsData');
-            gpsDataElement.textContent = JSON.stringify(data, null, 2);
-        };
-
-        socket.onclose = function () {
-            console.log('WebSocket disconnected');
-        };
-
-        socket.onerror = function (error) {
-            console.error('WebSocket error: ', error);
-        };
-    </script>
+    <div class="container">
+        <header>
+            <h1>🛰️ Трекер спутников</h1>
+            <div class="status">
+                <span id="connection-status" class="disconnected">Отключено</span>
+                <span id="satellite-count">0 спутников</span>
+            </div>
+        </header>
+        <div id="map"></div>
+        <div class="data-panel">
+            <pre id="gps-data">Ожидание данных...</pre>
+        </div>
+    </div>
+    <script src="app.js"></script>
 </body>
 </html>
