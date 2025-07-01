@@ -39,6 +39,10 @@ namespace SatelliteTracker.Backend.Services
                         await _repository.AddSatelliteDataAsync(data);
                         _logger.LogDebug($"Parsed GPGGA: Lat={data.Latitude}, Lon={data.Longitude}");
                     }
+                    else
+                    {
+                        _logger.LogWarning($"Parsing $GPGGA returned null.");
+                    }
                     return data;
                 }
                 else if (nmeaMessage.StartsWith("$GPGSV"))
@@ -59,7 +63,39 @@ namespace SatelliteTracker.Backend.Services
                         await _repository.AddSatelliteDataAsync(data);
                         _logger.LogInformation($"Parsed GPGLL: Lat={data.Latitude}, Lon={data.Longitude}");
                     }
+                    else
+                    {
+                        _logger.LogWarning($"Parsing $GPGLL returned null.");
+                    }
                     return null;
+                }
+                else if (nmeaMessage.StartsWith("$GPGSA"))
+                {
+                    var data = ParseGPGSA(nmeaMessage);
+                    if (data != null)
+                    {
+                        await _repository.AddSatelliteDataAsync(data);
+                        _logger.LogInformation($"Parsed GPGSA: PDOP={data.PDOP}, HDOP={data.HDOP}, VDOP={data.VDOP}");
+                    }
+                    else
+                    {
+                        _logger.LogWarning($"Parsing $GPGSA returned null.");
+                    }
+                    return null;
+                }
+                else if (nmeaMessage.StartsWith("$GPRMC"))
+                {
+                    var data = ParseGPRMC(nmeaMessage);
+                    if (data != null)
+                    {
+                        await _repository.AddSatelliteDataAsync(data);
+                        _logger.LogInformation($"Parsed GPRMC: Lat={data.Latitude}, Lon={data.Longitude}, Speed={data.Speed}, Direction={data.Direction}");
+                    }
+                    else
+                    {
+                        _logger.LogWarning($"Parsing $GPRMC returned null.");
+                    }
+                    return data;
                 }
 
                 _logger.LogWarning($"Unsupported NMEA message: {nmeaMessage.Split(',')[0]}");
@@ -71,6 +107,7 @@ namespace SatelliteTracker.Backend.Services
                 return null;
             }
         }
+
 
         private SatelliteData? ParseGPGGA(string message)
         {
@@ -101,6 +138,58 @@ namespace SatelliteTracker.Backend.Services
                 Altitude = altitude,
                 SatellitesInUse = satellitesInUse,
                 UsedInFix = usedInFix
+            };
+        }
+
+        private SatelliteData? ParseGPGSA(string message)
+        {
+            var parts = message.Split(',');
+
+            if (parts.Length < 17)
+            {
+                _logger.LogWarning("Invalid GPGSA format: " + message);
+                return null;
+            }
+
+            return new SatelliteData
+            {
+                Timestamp = DateTime.UtcNow,
+                SentenceType = "GPGSA",
+                SatelliteSystem = "GPS",
+                PDOP = TryParseDouble(parts[15]),
+                HDOP = TryParseDouble(parts[16]),
+                VDOP = TryParseDouble(parts[17]?.Split('*')[0] ?? "")
+            };
+        }
+
+        private SatelliteData? ParseGPRMC(string message)
+        {
+            var parts = message.Split(',');
+
+            if (parts.Length < 12)
+            {
+                _logger.LogWarning("Invalid GPRMC format: " + message);
+                return null;
+            }
+
+            var latitude = ParseCoordinate(parts[3], parts[4]);
+            var longitude = ParseCoordinate(parts[5], parts[6], isLongitude: true);
+            var speed = TryParseDouble(parts[7]);
+            var direction = TryParseDouble(parts[8]);
+
+            if (latitude == null || longitude == null)
+                return null;
+
+            return new SatelliteData
+            {
+                Timestamp = DateTime.UtcNow,
+                SentenceType = "GPRMC",
+                SatelliteSystem = "GPS",
+                Latitude = latitude,
+                Longitude = longitude,
+                Speed = speed,
+                Direction = direction,
+                UsedInFix = parts[2] == "A"
             };
         }
 
