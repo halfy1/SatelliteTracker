@@ -1,9 +1,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SatelliteTracker.Backend.Models;
-using SatelliteTracker.Backend.Repositories.Interfaces;
 using SatelliteTracker.Backend.Services.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Text;

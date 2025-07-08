@@ -1,4 +1,3 @@
-// Global variables
 let map;
 let pathCoordinates = [];
 let placemark;
@@ -26,7 +25,6 @@ const config = {
     }
 };
 
-// Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', function () {
     initializeMap();
     initializeCompass();
@@ -37,7 +35,6 @@ document.addEventListener('DOMContentLoaded', function () {
     setupWebSocketControls();
 });
 
-// Initialize Yandex Map
 function initializeMap() {
     ymaps.ready(function () {
         map = new ymaps.Map('map', {
@@ -46,7 +43,6 @@ function initializeMap() {
             controls: ['zoomControl', 'typeSelector']
         });
 
-        // Создаем кастомный пресет для иконок спутников
         ymaps.option.presetStorage.add('satelliteIcon', {
             iconLayout: 'default#imageWithContent',
             iconImageHref: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iY3VycmVudENvbG9yIiBkPSJNMTIsMkM2LjQ4LDIgMiw2LjQ4IDIsMTJzNC40OCwxMCAxMCwxMCAxMC00LjQ4IDEwLTEwUzE3LjUyLDIgMTIsMnogTTEyLDIwYy00LjQyLDAtOC0zLjU4LTgtOHMzLjU4LTggOC04IDgsMy41OCA4LDhTMTYuNDIsMjAgMTIsMjB6Ii8+PC9zdmc+',
@@ -69,18 +65,15 @@ function initializeMap() {
     });
 }
 
-// Initialize compass markers
 function initializeCompass() {
     const compassMarkers = document.getElementById('compass-markers');
-    compassMarkers.innerHTML = ''; // Очищаем перед созданием новых маркеров
+    compassMarkers.innerHTML = '';
 
-    // Создаем маркеры для основных направлений (каждые 45 градусов)
     for (let i = 0; i < 360; i += 45) {
         const marker = document.createElement('div');
         marker.className = 'compass-marker';
         marker.style.transform = `rotate(${i}deg)`;
 
-        // Делаем основные направления (N, E, S, W) более заметными
         if (i % 90 === 0) {
             marker.style.height = '15px';
             marker.style.backgroundColor = '#ef4444';
@@ -93,10 +86,10 @@ function initializeCompass() {
             label.style.top = '20px';
 
             let direction;
-            if (i === 0) direction = 'С'; // Север
-            else if (i === 90) direction = 'В'; // Восток
-            else if (i === 180) direction = 'Ю'; // Юг
-            else if (i === 270) direction = 'З'; // Запад
+            if (i === 0) direction = 'С';
+            else if (i === 90) direction = 'В';
+            else if (i === 180) direction = 'Ю';
+            else if (i === 270) direction = 'З';
 
             label.textContent = direction;
             marker.appendChild(label);
@@ -104,24 +97,19 @@ function initializeCompass() {
         compassMarkers.appendChild(marker);
     }
 }
-
-// Обновленная секция времени в processData()
 if (data.Timestamp) {
     const date = new Date(data.Timestamp);
     const timeElement = document.getElementById('gps-time');
     const dateElement = document.getElementById('gps-date');
 
-    // Форматируем время с секундами
     timeElement.textContent = date.toLocaleTimeString('ru-RU', {
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit'
     });
 
-    // Форматируем дату
     dateElement.textContent = date.toLocaleDateString('ru-RU');
 
-    // Добавляем блок с координатами и высотой
     const locationElement = document.createElement('div');
     locationElement.className = 'text-gray-600 text-sm mt-2';
 
@@ -138,7 +126,6 @@ if (data.Timestamp) {
         locationElement.innerHTML += `<div>Высота: ${parseFloat(data.Altitude).toFixed(1)} м</div>`;
     }
 
-    // Удаляем старые данные, если есть
     const oldLocation = dateElement.nextElementSibling;
     if (oldLocation && oldLocation.classList.contains('location-data')) {
         oldLocation.remove();
@@ -148,19 +135,17 @@ if (data.Timestamp) {
     dateElement.after(locationElement);
 }
 
-// Initialize tab functionality
 function initializeTabs() {
     const tabButtons = document.querySelectorAll('.tab-btn');
 
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
-            // Remove active class from all buttons and content
+
             tabButtons.forEach(btn => btn.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600'));
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
             });
 
-            // Add active class to clicked button and corresponding content
             button.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
             const tabId = button.getAttribute('data-tab');
             document.getElementById(tabId).classList.add('active');
@@ -168,7 +153,6 @@ function initializeTabs() {
     });
 }
 
-// Initialize satellite chart
 function initializeChart() {
     const ctx = document.getElementById('satelliteChart').getContext('2d');
     satelliteChart = new Chart(ctx, {
@@ -205,7 +189,6 @@ function initializeChart() {
     });
 }
 
-// Initialize playback controls
 function initializePlaybackControls() {
     const playBtn = document.getElementById('play-btn');
     const pauseBtn = document.getElementById('pause-btn');
@@ -238,7 +221,6 @@ function initializePlaybackControls() {
     });
 }
 
-// Initialize constellation filters
 function initializeConstellationFilters() {
     const filterButtons = document.querySelectorAll('.constellation-btn');
 
@@ -262,7 +244,6 @@ function initializeConstellationFilters() {
     });
 }
 
-// Setup WebSocket controls
 function setupWebSocketControls() {
     const connectBtn = document.getElementById('connect-btn');
     const urlInput = document.getElementById('websocket-url');
@@ -343,7 +324,6 @@ function setupWebSocketControls() {
     });
 }
 
-// Start playback
 function startPlayback() {
     if (playbackData.length === 0) return;
 
@@ -362,13 +342,11 @@ function startPlayback() {
     }, 1000 / playbackSpeed);
 }
 
-// Pause playback
 function pausePlayback() {
     isPlaying = false;
     clearInterval(playbackInterval);
 }
 
-// Stop playback
 function stopPlayback() {
     isPlaying = false;
     clearInterval(playbackInterval);
@@ -380,12 +358,10 @@ function stopPlayback() {
     }
 }
 
-// Clear raw data button
 document.getElementById('clear-raw').addEventListener('click', function () {
     document.getElementById('raw-data').textContent = '';
 });
 
-// Process incoming data
 function processData(data) {
     // Update raw data display
     const rawDataElement = document.getElementById('raw-data');
@@ -476,7 +452,6 @@ function processData(data) {
             locationElement.innerHTML += `<div>Высота: ${parseFloat(data.Altitude).toFixed(1)} м</div>`;
         }
 
-        // Удаляем старые данные, если есть
         const oldLocation = dateElement.nextElementSibling;
         if (oldLocation && oldLocation.classList.contains('location-data')) {
             oldLocation.remove();
@@ -487,7 +462,6 @@ function processData(data) {
     }
 }
 
-// Update satellite table
 function updateSatelliteTable(satellites) {
     const tableBody = document.getElementById('satellite-table');
     tableBody.innerHTML = '';
@@ -551,7 +525,7 @@ function getRussianPlural(number, titles) {
     ];
 }
 
-// Update sky plot
+
 function updateSkyPlot(satellites) {
     const skyplot = document.getElementById('skyplot');
     skyplot.innerHTML = '';
@@ -636,7 +610,6 @@ function updateSkyPlot(satellites) {
     });
 }
 
-// Update satellite chart
 function updateSatelliteChart(satellites) {
     const filteredSatellites = satellites.filter(sat => constellationFilters[sat.System]);
 

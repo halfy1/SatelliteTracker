@@ -30,16 +30,16 @@ namespace SatelliteTracker.Backend.Models
 
         public bool UsedInFix { get; set; }
 
-        // Тип предложения NMEA (например, GPGGA, GPGSV)
+        // Тип предложения NMEA
         public string SentenceType { get; set; } = string.Empty;
 
-        // Параметры точности (для GPGSA)
+        // Параметры точности (GPGSA)
         public double? PDOP { get; set; }
         public double? HDOP { get; set; }
         public double? VDOP { get; set; }
 
-        // Навигационные параметры (для GPRMC)
-        public double? Speed { get; set; }       // Скорость (в узлах)
-        public double? Direction { get; set; }   // Направление (в градусах)
+        // Навигационные параметры (GPRMC)
+        public double? Speed { get; set; }       // в узлах
+        public double? Direction { get; set; }   // в градусах
     }
 }

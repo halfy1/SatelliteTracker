@@ -19,14 +19,15 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new() { Title = "SatelliteTracker API", Version = "v1" });
 });
 
-//for db
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 // Подключение бд
 builder.Services.AddScoped<ISatelliteDataRepository, SatelliteDataRepository>();
-// Mock данные
+
+// Mock данные. Используется отдельно от данных из output.nmea или COM порта
 //builder.Services.AddSingleton<ISatelliteDataRepository, MockSatelliteDataRepository>();
 
 // Регистрация сервисов
